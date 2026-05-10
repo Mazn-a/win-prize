@@ -11,11 +11,29 @@
         .tower { width: 30%; height: 100%; position: relative; border-bottom: 8px solid #334155; display: flex; flex-direction: column-reverse; align-items: center; }
         .rod { width: 10px; height: 200px; background: #475569; position: absolute; bottom: 0; z-index: -1; border-radius: 5px; }
         .disk { height: 35px; background: linear-gradient(90deg, #3b82f6, #06b6d4); border-radius: 10px; margin-bottom: 2px; width: 100%; display: flex; align-items: center; justify-content: center; font-weight: bold; cursor: pointer; touch-action: none; }
-        #prank-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #be123c; z-index: 100; flex-direction: column; justify-content: center; align-items: center; padding: 20px; }
-        button { padding: 15px 30px; font-size: 18px; border-radius: 10px; border: none; cursor: pointer; font-weight: bold; margin-top: 20px; }
+        
+        #prank-overlay, #start-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 100; flex-direction: column; justify-content: center; align-items: center; padding: 20px; display: flex; }
+        #start-overlay { background: #0f172a; }
+        #prank-overlay { display: none; background: #be123c; }
+        
+        input, select { padding: 12px; border-radius: 8px; border: none; width: 80%; max-width: 300px; margin-bottom: 15px; font-size: 16px; text-align: center; }
+        button { padding: 15px 30px; font-size: 18px; border-radius: 10px; border: none; cursor: pointer; font-weight: bold; background: #fbbf24; color: #000; }
+        #prank-overlay button { background: white; }
     </style>
 </head>
 <body>
+
+    <div id="start-overlay">
+        <h1 style="color: #fbbf24;">مستعد للتحدي؟ 🤑</h1>
+        <p>اكتب اسمك وحدد (ولد/بنت) عشان الجائزة</p>
+        <input type="text" id="user-name" placeholder="اكتب اسمك هنا..." autocomplete="off">
+        <select id="user-gender">
+            <option value="male">ولد</option>
+            <option value="female">بنت</option>
+        </select>
+        <button onclick="startGame()">أنا مستعد، ابدأ!</button>
+    </div>
+
     <h1 style="color: #fbbf24;">اتحداك تفوز ولك 100 ريال🤑</h1>
     <h2 id="move-count">التحركات: 0 / 31</h2>
 
@@ -27,29 +45,50 @@
 
     <div id="prank-overlay">
         <h1 style="font-size: 80px;">😂😂</h1>
-        <h1>أتحداك تفوز!</h1>
-        <p> 😱😂الـ 100 ريال بعيدة عن شاربك.. جرب مرة ثانية!</p>
+        <h1 id="prank-title">يا [الاسم] أتحداك تفوز!</h1>
+        <p id="prank-msg">الـ 100 ريال بعيدة عنك..</p>
         <button onclick="location.reload()">محاولة ثانية</button>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dragula/3.7.3/dragula.min.js"></script>
     <script>
         let moves = 0;
+        let playerName = "";
+        let playerGender = "male";
+
+        function startGame() {
+            const nameInput = document.getElementById('user-name');
+            if (nameInput.value.trim() === "") {
+                alert("يا بطل، لازم تكتب اسمك أول!");
+                return;
+            }
+            playerName = nameInput.value;
+            playerGender = document.getElementById('user-gender').value;
+            document.getElementById('start-overlay').style.display = 'none';
+        }
+
         const drake = dragula([document.getElementById('tower-0'), document.getElementById('tower-1'), document.getElementById('tower-2')], {
             invalid: (el, handle) => el.previousElementSibling.classList.contains('disk')
         });
 
         drake.on('drop', (el, target, source) => {
             if (target === source) return;
-            const topDisk = target.querySelector('.disk:nth-child(n+2)'); // يتجاهل الـ rod
-            
+            const topDisk = target.querySelector('.disk:nth-child(n+2)');
             if (topDisk && parseInt(el.dataset.size) > parseInt(topDisk.dataset.size)) {
-                source.appendChild(el); // حركة غير قانونية
+                source.appendChild(el);
             } else {
                 moves++;
                 document.getElementById('move-count').innerText = "التحركات: " + moves + " / 31";
                 if (moves >= 30) {
-                    setTimeout(() => document.getElementById('prank-overlay').style.display = 'flex', 500);
+                    setTimeout(() => {
+                        document.getElementById('prank-title').innerText = `يا ${playerName} أتحداك تفوز!`;
+                        if (playerGender === "female") {
+                            document.getElementById('prank-msg').innerText = "😱 الـ 100 ريال بعيدة عن خيالك.. جربي مرة ثانية!";
+                        } else {
+                            document.getElementById('prank-msg').innerText = "😱 الـ 100 ريال بعيدة عن شاربك.. جرب مرة ثانية!";
+                        }
+                        document.getElementById('prank-overlay').style.display = 'flex';
+                    }, 500);
                 }
             }
         });
