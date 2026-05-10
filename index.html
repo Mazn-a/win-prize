@@ -1,107 +1,509 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>تحدي الـ 100 ريال 🤑</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dragula/3.7.3/dragula.min.css">
-    <style>
-        body { background: #0f172a; color: white; font-family: sans-serif; text-align: center; margin: 0; overflow: hidden; touch-action: none; }
-        .header { padding: 15px; background: #1e293b; border-bottom: 2px solid #fbbf24; position: relative; }
-        
-        /* دليل الهدف - ملون ومرقم ومطابق تماماً */
-        .target-guide { position: absolute; right: 15px; top: 10px; background: rgba(0,0,0,0.5); padding: 8px; border-radius: 12px; border: 2px solid #fbbf24; width: 80px; }
-        .tg-disk { height: 16px; margin: 3px auto; border-radius: 4px; font-size: 11px; font-weight: bold; color: white; display: flex; align-items: center; justify-content: center; }
-        
-        .stage { display: flex; justify-content: space-around; align-items: flex-end; height: 320px; margin-top: 35px; padding: 0 10px; }
-        .column { width: 30%; height: 100%; border-bottom: 8px solid #475569; display: flex; flex-direction: column; align-items: center; background: rgba(255,255,255,0.03); border-radius: 15px 15px 0 0; padding-top: 20px; transition: 0.3s; }
-        #c3 { border-bottom-color: #fbbf24; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>تحدي الـ100 </title>
 
-        .disk { height: 42px; margin: 3px 0; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 20px; cursor: pointer; color: white; width: 80%; }
-        .d1 { background: #ef4444; width: 40%; } .d2 { background: #f97316; width: 55%; }
-        .d3 { background: #eab308; width: 70%; } .d4 { background: #22c55e; width: 85%; }
-        .d5 { background: #3b82f6; width: 95%; }
+<style>
 
-        .fake-num { position: fixed; width: 25px; height: 25px; background: #475569; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; cursor: pointer; transition: all 0.1s; z-index: 3000; opacity: 0.8; }
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:sans-serif;
+-webkit-tap-highlight-color: transparent;
+}
 
-        #prank-overlay { position: fixed; inset: 0; z-index: 4000; display: none; flex-direction: column; justify-content: center; align-items: center; background: #be123c; padding: 20px; }
-        button { padding: 15px 30px; border-radius: 12px; border: none; background: #fbbf24; color: black; font-weight: bold; cursor: pointer; }
-    </style>
+body{
+background:#0f172a;
+color:white;
+overflow:hidden;
+}
+
+.screen{
+position:fixed;
+inset:0;
+display:flex;
+justify-content:center;
+align-items:center;
+padding:20px;
+}
+
+.card{
+background:#1e293b;
+padding:25px;
+border-radius:25px;
+width:100%;
+max-width:360px;
+border:2px solid #334155;
+text-align:center;
+}
+
+h1{
+font-size:30px;
+margin-bottom:10px;
+}
+
+p{
+color:#cbd5e1;
+line-height:1.7;
+margin-bottom:18px;
+}
+
+input,select{
+width:100%;
+padding:15px;
+border:none;
+border-radius:14px;
+margin-bottom:12px;
+background:#334155;
+color:white;
+font-size:16px;
+outline:none;
+}
+
+button{
+width:100%;
+padding:16px;
+border:none;
+border-radius:14px;
+background:#22c55e;
+font-size:18px;
+font-weight:bold;
+cursor:pointer;
+}
+
+#game{
+display:none;
+}
+
+.top{
+padding:18px;
+background:#111827;
+text-align:center;
+border-bottom:2px solid #1f2937;
+}
+
+#task{
+margin-top:10px;
+font-size:20px;
+color:#facc15;
+font-weight:bold;
+}
+
+#timer{
+margin-top:8px;
+font-size:18px;
+color:#22c55e;
+font-weight:bold;
+}
+
+.area{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:12px;
+padding:20px;
+}
+
+.box{
+height:78px;
+border-radius:20px;
+display:flex;
+justify-content:center;
+align-items:center;
+font-size:28px;
+font-weight:bold;
+cursor:pointer;
+transition:.2s;
+user-select:none;
+position:relative;
+}
+
+.box:active{
+transform:scale(.9);
+}
+
+.msg{
+position:fixed;
+bottom:20px;
+left:50%;
+transform:translateX(-50%);
+background:black;
+padding:12px 18px;
+border-radius:14px;
+display:none;
+font-size:15px;
+z-index:999;
+max-width:80%;
+text-align:center;
+}
+
+#final{
+position:fixed;
+inset:0;
+background:#be123c;
+display:none;
+justify-content:center;
+align-items:center;
+flex-direction:column;
+text-align:center;
+padding:20px;
+z-index:99999;
+}
+
+#final h2{
+font-size:70px;
+margin-bottom:10px;
+}
+
+#final p{
+font-size:24px;
+margin-bottom:20px;
+}
+
+</style>
 </head>
+
 <body>
 
-    <div class="header">
-        <div class="target-guide">
-            <span style="font-size: 11px; color: #fbbf24; display: block; margin-bottom: 3px;">الهدف👇</span>
-            <div class="tg-disk d1">1</div><div class="tg-disk d2">2</div>
-            <div class="tg-disk d3">3</div><div class="tg-disk d4">4</div>
-            <div class="tg-disk d5">5</div>
-        </div>
-        <h1 style="font-size: 18px; margin: 0;">رتبهم ولك 100 ريال 🤑</h1>
-        <p id="move-count" style="color: #fbbf24; margin: 5px 0; font-weight: bold;">التحركات المتبقية: 15</p>
-    </div>
+<div class="screen" id="start">
 
-    <div id="btn-6" class="fake-num" style="top: 80%; right: 20px;" onmouseover="flee(this)" onclick="trollMsg()">6</div>
-    <div id="btn-7" class="fake-num" style="top: 80%; left: 20px;" onmouseover="flee(this)" onclick="trollMsg()">7</div>
+<div class="card">
 
-    <div class="stage">
-        <div class="column" id="c1"></div>
-        <div class="column" id="c2"></div>
-        <div class="column" id="c3"></div>
-    </div>
+<h1>💸 تحدي الـ100</h1>
 
-    <div id="prank-overlay">
-        <h1 style="font-size: 70px;">❌ خسرت!</h1>
-        <h2 style="margin: 10px 0;">الـ 100 ريال طارت 😂</h2>
-        <p style="font-size: 18px;"> 😘ما عليه، كنت قريب مرة بس الحركات خلصت!</p>
-        <button onclick="location.reload()">اما ذي محاولتك 🔄</button>
-    </div>
+<p>
+اضغط الأرقام من 1 إلى 10 بالترتيب<br>
+إذا خلصتها خلال 15 ثانية لك 100 ريال 🤑
+</p>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/dragula/3.7.3/dragula.min.js"></script>
-    <script>
-        let moves = 15;
-        const cols = [document.getElementById('c1'), document.getElementById('c2'), document.getElementById('c3')];
-        
-        // توزيع البداية (يعطيه أمل)
-        const disks = [
-            '<div class="disk d1" id="i1">1</div>',
-            '<div class="disk d2" id="i2">2</div>',
-            '<div class="disk d3" id="i3">3</div>',
-            '<div class="disk d4" id="i4">4</div>',
-            '<div class="disk d5" id="i5">5</div>'
-        ];
-        disks.forEach((d, index) => cols[index % 2].innerHTML += d);
+<input id="name" type="text" placeholder="اكتب اسمك">
 
-        const drake = dragula(cols);
+<select id="gender">
+<option>شنقل 👦</option>
+<option>منقل 👧</option>
+</select>
 
-        drake.on('drop', (el, target) => {
-            moves--;
-            document.getElementById('move-count').innerText = "التحركات المتبقية: " + moves;
+<button onclick="startGame()">
+يلا 
+</button>
 
-            // لحظة الغدر (إذا وصل للعمود الأصفر بالكامل أو خلصت الحركات)
-            if (moves <= 0 || (target.id === 'c3' && target.children.length === 5)) {
-                setTimeout(() => {
-                    // بعثرة الأقراص بوقاحة
-                    document.querySelectorAll('.disk').forEach(d => {
-                        cols[Math.floor(Math.random() * 3)].appendChild(d);
-                    });
-                    
-                    setTimeout(() => {
-                        document.getElementById('prank-overlay').style.display = 'flex';
-                    }, 400);
-                }, 100);
-            }
-        });
+</div>
 
-        function flee(btn) {
-            btn.style.top = Math.random() * 80 + 10 + "%";
-            btn.style.left = Math.random() * 80 + 10 + "%";
-            btn.style.transform = `scale(${Math.random() * 0.4 + 0.2})`;
-        }
+</div>
 
-        function trollMsg() {
-            alert("ياخي لا تلمسني!  طالع جدام");
-        }
-    </script>
+<div id="game">
+
+<div class="top">
+
+<h2 id="welcome"></h2>
+
+<div id="task">
+اضغط رقم 1 👇
+</div>
+
+<div id="timer">
+⏰ 15
+</div>
+
+</div>
+
+<div class="area" id="area"></div>
+
+</div>
+
+<div class="msg" id="msg"></div>
+
+<div id="final">
+
+<h2>😂😂😂</h2>
+
+<p id="finalText"></p>
+
+<button onclick="location.reload()">
+عيد لاتوقف
+</button>
+
+</div>
+
+<script>
+
+const area = document.getElementById("area");
+
+let current = 1;
+let time = 15;
+let timer;
+
+let fourClicks = 0;
+let nineClicks = 0;
+
+function startGame(){
+
+const name =
+document.getElementById("name").value || "الوحش";
+
+document.getElementById("welcome").innerText =
+"اما شد حيلك اكثر يا " + name + " 😘";
+
+document.getElementById("start").style.display =
+"none";
+
+document.getElementById("game").style.display =
+"block";
+
+createGame();
+
+timer = setInterval(()=>{
+
+time--;
+
+document.getElementById("timer").innerText =
+"⏰ " + time;
+
+if(time <= 0){
+
+finish();
+
+}
+
+},1000);
+
+}
+
+function createGame(){
+
+const nums = [1,2,3,4,5,6,7,8,9,10];
+
+nums.sort(()=>Math.random()-0.5);
+
+nums.forEach(num=>{
+
+const div =
+document.createElement("div");
+
+div.className = "box";
+
+const colors = [
+"#ef4444",
+"#3b82f6",
+"#22c55e",
+"#eab308",
+"#8b5cf6",
+"#f97316",
+"#06b6d4",
+"#ec4899"
+];
+
+div.style.background =
+colors[Math.floor(Math.random()*colors.length)];
+
+div.innerText = num;
+
+div.onclick = ()=>clickNum(div,num);
+
+area.appendChild(div);
+
+});
+
+}
+
+function clickNum(div,num){
+
+if(num != current){
+
+show("❌ غلط ركز 😂");
+return;
+}
+
+if(num == 4){
+
+fourClicks++;
+
+if(fourClicks == 1){
+
+show("شكل النت معلق ما انضغط 🤔");
+return;
+
+}
+
+if(fourClicks == 2){
+
+show("ياليل الإزعاج طيب لاتكسر الشاشه بس 😂");
+return;
+
+}
+
+}
+
+if(num == 5){
+
+show("🥱مزبوط كمل");
+
+}
+
+if(num == 6){
+
+if(!div.dataset.move){
+
+div.dataset.move = "yes";
+
+div.style.transform =
+"translateX(80px)";
+
+show("😽 اتحداك تصيدني");
+
+return;
+
+}
+
+}
+
+if(num == 9){
+
+nineClicks++;
+
+if(nineClicks == 1){
+
+div.innerText = "10";
+
+show("❌ ذا عشرة مو 9");
+
+return;
+
+}
+
+if(nineClicks == 2){
+
+div.style.transform =
+"rotate(180deg)";
+
+show("🙃 قلبته يمكن يصير 9");
+
+return;
+
+}
+
+if(nineClicks == 3){
+
+div.style.fontSize = "15px";
+
+show("🤏 صغرناه يمكن يزبط");
+
+return;
+
+}
+
+if(nineClicks == 4){
+
+div.style.opacity = ".2";
+
+show("😂 اختفى الرقم");
+
+return;
+
+}
+
+if(nineClicks == 5){
+
+div.style.opacity = "1";
+
+div.innerText = "?";
+
+show("❓ حتى انا ضعت");
+
+return;
+
+}
+
+if(nineClicks == 6){
+
+div.innerText = "6";
+
+show("😭 صار 6");
+
+return;
+
+}
+
+if(nineClicks == 7){
+
+div.innerText = "9";
+
+show("😎 اخيراً");
+
+setTimeout(()=>{
+
+finish(true);
+
+},1200);
+
+return;
+
+}
+
+}
+
+div.style.opacity = ".25";
+div.style.pointerEvents = "none";
+
+navigator.vibrate?.(20);
+
+current++;
+
+document.getElementById("task").innerText =
+"اضغط رقم " + current + " 👇";
+
+}
+
+function finish(win){
+
+clearInterval(timer);
+
+document.getElementById("final").style.display =
+"flex";
+
+if(win){
+
+document.getElementById("finalText").innerHTML =
+`
+هههههههههههههههه 😂💔<br><br>
+قسم بالله انك فاضي تجلس تطارد رقم 9
+`;
+
+}else{
+
+document.getElementById("finalText").innerHTML =
+`
+خلص الوقت 😭😂<br><br>
+كنت قريب والله
+`;
+
+}
+
+}
+
+function show(text){
+
+const msg =
+document.getElementById("msg");
+
+msg.innerText = text;
+
+msg.style.display = "block";
+
+clearTimeout(window.hideMsg);
+
+window.hideMsg =
+setTimeout(()=>{
+
+msg.style.display = "none";
+
+},1300);
+
+}
+
+</script>
+
 </body>
 </html>
