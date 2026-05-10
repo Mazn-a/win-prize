@@ -7,52 +7,38 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dragula/3.7.3/dragula.min.css">
     <style>
         body { background: #0f172a; color: white; font-family: sans-serif; text-align: center; margin: 0; overflow: hidden; touch-action: none; }
-        .header { padding: 15px; background: #1e293b; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
-        .goal-msg { color: #fbbf24; font-weight: bold; margin-top: 10px; font-size: 16px; border: 1px solid #fbbf24; display: inline-block; padding: 5px 15px; border-radius: 20px; }
+        .header { padding: 10px; background: #1e293b; box-shadow: 0 4px 15px rgba(0,0,0,0.5); position: relative; }
         
-        .stage { display: flex; justify-content: space-around; align-items: flex-end; height: 350px; margin-top: 30px; padding: 0 10px; }
+        /* صورة الهدف المطلوبة */
+        .target-preview { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,0.1); padding: 5px; border-radius: 8px; border: 1px solid #fbbf24; }
+        .target-preview div { height: 10px; margin: 2px auto; border-radius: 2px; }
         
-        .column { width: 28%; height: 100%; border-bottom: 8px solid #475569; display: flex; flex-direction: column-reverse; align-items: center; background: rgba(255,255,255,0.03); border-radius: 15px 15px 0 0; transition: all 0.3s ease; }
-        
-        /* العمود المستهدف للفوز (وهمي) */
+        .goal-msg { color: #fbbf24; font-weight: bold; font-size: 14px; margin: 5px 0; }
+        .stage { display: flex; justify-content: space-around; align-items: flex-end; height: 320px; margin-top: 20px; padding: 0 10px; }
+        .column { width: 30%; height: 100%; border-bottom: 8px solid #475569; display: flex; flex-direction: column; align-items: center; background: rgba(255,255,255,0.03); border-radius: 15px 15px 0 0; padding-top: 20px; }
         #c3 { border-bottom-color: #fbbf24; background: rgba(251, 191, 36, 0.05); }
 
-        .column.highlight { background: rgba(251, 191, 36, 0.2); box-shadow: inset 0 0 20px rgba(251, 191, 36, 0.2); }
+        .disk { height: 40px; margin: 4px 0; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 20px; cursor: pointer; color: white; transition: 0.2s; width: 80%; }
+        .d1 { background: #ef4444; width: 40%; } .d2 { background: #f97316; width: 55%; }
+        .d3 { background: #eab308; width: 70%; } .d4 { background: #22c55e; width: 85%; }
+        .d5 { background: #3b82f6; width: 95%; }
 
-        .disk { height: 45px; margin: 3px 0; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 22px; cursor: pointer; color: white; touch-action: none; }
-        .d1 { width: 60px; background: linear-gradient(45deg, #ef4444, #b91c1c); }
-        .d2 { width: 75px; background: linear-gradient(45deg, #f97316, #c2410c); }
-        .d3 { width: 90px; background: linear-gradient(45deg, #eab308, #a16207); }
-        .d4 { width: 105px; background: linear-gradient(45deg, #22c55e, #15803d); }
-        .d5 { width: 120px; background: linear-gradient(45deg, #3b82f6, #1d4ed8); }
-
-        .gu-transit { opacity: 0.5; box-shadow: 0 0 25px #fbbf24 !important; }
-        .gu-mirror { cursor: grabbing; box-shadow: 0 10px 30px rgba(0,0,0,0.8); border: 2px solid #fbbf24; transform: scale(1.1); position: fixed !important; }
-
-        #start-overlay, #prank-overlay { position: fixed; inset: 0; z-index: 2000; display: flex; flex-direction: column; justify-content: center; align-items: center; background: #0f172a; padding: 20px; }
-        #prank-overlay { display: none; background: #be123c; }
-        
-        input, select, button { padding: 18px; border-radius: 12px; border: none; margin: 10px; font-size: 18px; width: 85%; max-width: 320px; text-align: center; font-weight: bold; }
-        button { background: #fbbf24; color: black; cursor: pointer; }
+        #prank-overlay { position: fixed; inset: 0; z-index: 2000; display: none; flex-direction: column; justify-content: center; align-items: center; background: #be123c; padding: 20px; }
+        button { padding: 15px 30px; border-radius: 12px; border: none; background: #fbbf24; color: black; font-weight: bold; cursor: pointer; margin-top: 20px; }
     </style>
 </head>
 <body>
 
-    <div id="start-overlay">
-        <h1 style="color: #fbbf24;">مستعد للتحدي؟ 🤑</h1>
-        <p>اكتب اسمك عشان الجائزة</p>
-        <input type="text" id="user-name" placeholder="اسمك هنا..." autocomplete="off">
-        <select id="user-gender">
-            <option value="male">ولد</option>
-            <option value="female">بنت</option>
-        </select>
-        <button onclick="startGame()">ابدأ التحدي ✅</button>
-    </div>
-
     <div class="header">
-        <h1 style="color: #fbbf24; font-size: 22px; margin: 0;">اتحداك ترتبهم ولك 100 ريال🤑</h1>
-        <div class="goal-msg">المطلوب: رتب الأرقام 1-5 في العمود الأصفر</div>
-        <h2 id="move-count" style="margin: 10px 0; font-size: 18px;">التحركات: 0 / 15</h2>
+        <div class="target-preview">
+            <span style="font-size: 10px; display: block; margin-bottom: 3px;">الهدف 👇</span>
+            <div class="d1" style="height: 6px;"></div><div class="d2" style="height: 6px;"></div>
+            <div class="d3" style="height: 6px;"></div><div class="d4" style="height: 6px;"></div>
+            <div class="d5" style="height: 6px;"></div>
+        </div>
+        <h1 style="color: #fbbf24; font-size: 18px; margin: 0;">تحدي الذكاء: فوز بـ 100 ريال 🤑</h1>
+        <div class="goal-msg">رتبهم من 1 (فوق) إلى 5 (تحت) في العمود الأصفر</div>
+        <h2 id="move-count" style="font-size: 16px;">التحركات المتبقية: 10</h2>
     </div>
 
     <div class="stage">
@@ -62,75 +48,51 @@
     </div>
 
     <div id="prank-overlay">
-        <h1 style="font-size: 80px;">😂😂</h1>
-        <h1 id="prank-title"></h1>
-        <p id="prank-msg"></p>
-        <button onclick="location.reload()" style="background: white;">محاولة ثانية 🔄</button>
+        <h1 style="font-size: 60px;">❌ خسرت!</h1>
+        <h2 id="p-msg">للأسف يا بطل.. الحركات خلصت عليك!</h2>
+        <p style="font-size: 18px;">الـ 100 ريال طارت، حاول تركز أكثر المرة الجاية 😂🔥</p>
+        <button onclick="location.reload()">أبي أحاول مرة ثانية 🔄</button>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dragula/3.7.3/dragula.min.js"></script>
     <script>
-        let moves = 0;
-        let playerName = "";
-        let playerGender = "male";
+        let moves = 10;
+        const disksHtml = [
+            '<div class="disk d1" data-v="1">1</div>',
+            '<div class="disk d2" data-v="2">2</div>',
+            '<div class="disk d3" data-v="3">3</div>',
+            '<div class="disk d4" data-v="4">4</div>',
+            '<div class="disk d5" data-v="5">5</div>'
+        ];
 
-        function startGame() {
-            const input = document.getElementById('user-name');
-            if (input.value.trim() === "") {
-                alert("اكتب اسمك يا بطل!");
-                return;
-            }
-            playerName = input.value;
-            playerGender = document.getElementById('user-gender').value;
-            
-            // توزيع الأرقام عشوائياً في الأعمدة
-            const disks = [
-                '<div class="disk d1" data-v="1">1</div>',
-                '<div class="disk d2" data-v="2">2</div>',
-                '<div class="disk d3" data-v="3">3</div>',
-                '<div class="disk d4" data-v="4">4</div>',
-                '<div class="disk d5" data-v="5">5</div>'
-            ];
-            
-            const columns = [document.getElementById('c1'), document.getElementById('c2'), document.getElementById('c3')];
-            
-            // لخبطة الأقراص وتوزيعها
-            disks.sort(() => Math.random() - 0.5).forEach(diskHtml => {
-                const randomCol = columns[Math.floor(Math.random() * columns.length)];
-                randomCol.innerHTML += diskHtml;
-            });
-            
-            document.getElementById('start-overlay').style.display = 'none';
-        }
-
-        const drake = dragula([
-            document.getElementById('c1'),
-            document.getElementById('c2'),
-            document.getElementById('c3')
-        ]);
-
-        drake.on('drag', () => {
-            document.querySelectorAll('.column').forEach(col => col.classList.add('highlight'));
+        // توزيع عشوائي صعب في البداية
+        const cols = [document.getElementById('c1'), document.getElementById('c2'), document.getElementById('c3')];
+        disksHtml.sort(() => Math.random() - 0.5).forEach(d => {
+            cols[Math.floor(Math.random() * 2)].innerHTML += d;
         });
 
-        drake.on('dragend', () => {
-            document.querySelectorAll('.column').forEach(col => col.classList.remove('highlight'));
-        });
+        const drake = dragula(cols);
 
-        drake.on('drop', () => {
-            moves++;
-            document.getElementById('move-count').innerText = "التحركات: " + moves + " / 15";
-            
-            if (moves >= 15) {
+        drake.on('drop', (el, target) => {
+            moves--;
+            document.getElementById('move-count').innerText = "التحركات المتبقية: " + moves;
+
+            // لحظة الغدر: إذا وصل للعمود الأصفر وباقي له حركات قليلة
+            if (target.id === 'c3' && target.children.length >= 4) {
                 setTimeout(() => {
-                    document.getElementById('prank-title').innerText = `يا ${playerName} أتحداك تفوز!`;
-                    if (playerGender === "female") {
-                        document.getElementById('prank-msg').innerText = "😱 الـ 100 ريال بعيدة عن خيالك.. جربي مرة ثانية!";
-                    } else {
-                        document.getElementById('prank-msg').innerText = "😱 الـ 100 ريال بعيدة عن شاربك.. جرب مرة ثانية!";
-                    }
+                    // تبديل الأماكن بشكل عشوائي ومفاجئ
+                    const allDisks = Array.from(document.querySelectorAll('.disk'));
+                    allDisks.forEach(d => {
+                        cols[Math.floor(Math.random() * 3)].appendChild(d);
+                    });
+                    el.style.transform = "scale(1.5) rotate(10deg)";
+                }, 200);
+            }
+
+            if (moves <= 0) {
+                setTimeout(() => {
                     document.getElementById('prank-overlay').style.display = 'flex';
-                }, 400);
+                }, 500);
             }
         });
     </script>
