@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>تحدي الـ100 </title>
+<title>تحدي الـ100 😂</title>
 
 <style>
 
@@ -41,7 +41,7 @@ text-align:center;
 }
 
 h1{
-font-size:30px;
+font-size:32px;
 margin-bottom:10px;
 }
 
@@ -87,14 +87,14 @@ border-bottom:2px solid #1f2937;
 
 #task{
 margin-top:10px;
-font-size:20px;
+font-size:22px;
 color:#facc15;
 font-weight:bold;
 }
 
 #timer{
 margin-top:8px;
-font-size:18px;
+font-size:22px;
 color:#22c55e;
 font-weight:bold;
 }
@@ -126,17 +126,19 @@ transform:scale(.9);
 
 .msg{
 position:fixed;
-bottom:20px;
+bottom:30px;
 left:50%;
 transform:translateX(-50%);
-background:black;
-padding:12px 18px;
-border-radius:14px;
+background:#000;
+padding:18px 24px;
+border-radius:18px;
 display:none;
-font-size:15px;
-z-index:999;
-max-width:80%;
+font-size:22px;
+font-weight:bold;
+z-index:9999;
+max-width:90%;
 text-align:center;
+border:2px solid #334155;
 }
 
 #final{
@@ -153,13 +155,20 @@ z-index:99999;
 }
 
 #final h2{
-font-size:70px;
-margin-bottom:10px;
+font-size:80px;
+margin-bottom:15px;
 }
 
 #final p{
-font-size:24px;
+font-size:30px;
+line-height:1.8;
 margin-bottom:20px;
+color:white;
+}
+
+.avatar{
+font-size:40px;
+margin-bottom:5px;
 }
 
 </style>
@@ -175,18 +184,18 @@ margin-bottom:20px;
 
 <p>
 اضغط الأرقام من 1 إلى 10 بالترتيب<br>
-إذا خلصتها خلال 15 ثانية لك 100 ريال 🤑
+إذا خلصتها خلال 15 ثانية لك 100 ريال 😎
 </p>
 
 <input id="name" type="text" placeholder="اكتب اسمك">
 
 <select id="gender">
-<option>شنقل 👦</option>
-<option>منقل 👧</option>
+<option value="شنقل">👦 شنقل</option>
+<option value="منقل">👧 منقل</option>
 </select>
 
 <button onclick="startGame()">
-يلا 
+ابدأ 🔥
 </button>
 
 </div>
@@ -221,8 +230,8 @@ margin-bottom:20px;
 
 <p id="finalText"></p>
 
-<button onclick="location.reload()">
-عيد لاتوقف
+<button onclick="restartGame()">
+إعادة المحاولة 🤡
 </button>
 
 </div>
@@ -235,16 +244,28 @@ let current = 1;
 let time = 15;
 let timer;
 
+let gender = "";
+
 let fourClicks = 0;
+let sevenClicks = 0;
 let nineClicks = 0;
+
+let savedName = "";
+let savedGender = "";
 
 function startGame(){
 
 const name =
 document.getElementById("name").value || "الوحش";
 
+gender =
+document.getElementById("gender").value;
+
+savedName = name;
+savedGender = gender;
+
 document.getElementById("welcome").innerText =
-"اما شد حيلك اكثر يا " + name + " 😘";
+"شد حيلك يا " + name + " 😎";
 
 document.getElementById("start").style.display =
 "none";
@@ -322,23 +343,17 @@ fourClicks++;
 
 if(fourClicks == 1){
 
-show("شكل النت معلق ما انضغط 🤔");
+show("🤔 هممم ما انضغط");
 return;
 
 }
 
 if(fourClicks == 2){
 
-show("ياليل الإزعاج طيب لاتكسر الشاشه بس 😂");
+show("😂 ياليل الإزعاج اضغط بشويش");
 return;
 
 }
-
-}
-
-if(num == 5){
-
-show("🥱مزبوط كمل");
 
 }
 
@@ -351,10 +366,47 @@ div.dataset.move = "yes";
 div.style.transform =
 "translateX(80px)";
 
-show("😽 اتحداك تصيدني");
+show("🏃 اتحداك تصيدني");
 
 return;
 
+}
+
+}
+
+if(num == 7){
+
+sevenClicks++;
+
+if(sevenClicks == 1){
+
+div.style.transform = "rotate(40deg)";
+show("😵 لف مدري ليه");
+return;
+
+}
+
+if(sevenClicks == 2){
+
+div.innerText = "L";
+show("😂 صار حرف");
+return;
+
+}
+
+if(sevenClicks == 3){
+
+div.style.opacity = ".2";
+show("👻 اختفى شوي");
+return;
+
+}
+
+if(sevenClicks == 4){
+
+div.style.opacity = "1";
+div.innerText = "7";
+show("😎 رجع");
 }
 
 }
@@ -366,9 +418,7 @@ nineClicks++;
 if(nineClicks == 1){
 
 div.innerText = "10";
-
 show("❌ ذا عشرة مو 9");
-
 return;
 
 }
@@ -377,9 +427,7 @@ if(nineClicks == 2){
 
 div.style.transform =
 "rotate(180deg)";
-
-show("🙃 قلبته يمكن يصير 9");
-
+show("🙃 قلبناه");
 return;
 
 }
@@ -387,60 +435,49 @@ return;
 if(nineClicks == 3){
 
 div.style.fontSize = "15px";
-
-show("🤏 صغرناه يمكن يزبط");
-
+show("🤏 صغرناه");
 return;
 
 }
 
 if(nineClicks == 4){
 
-div.style.opacity = ".2";
-
-show("😂 اختفى الرقم");
-
+div.innerText = "?";
+show("❓ حتى انا ضعت");
 return;
 
 }
 
 if(nineClicks == 5){
 
-div.style.opacity = "1";
-
-div.innerText = "?";
-
-show("❓ حتى انا ضعت");
-
+div.innerText = "6";
+show("😭 صار 6");
 return;
 
 }
 
 if(nineClicks == 6){
 
-div.innerText = "6";
-
-show("😭 صار 6");
-
-return;
+div.innerText = "9";
+show("😎 اخيراً");
+}
 
 }
 
-if(nineClicks == 7){
+if(num == 10){
 
-div.innerText = "9";
+div.style.opacity = "0";
+div.style.pointerEvents = "none";
 
-show("😎 اخيراً");
+show("🏃‍♂️ ههههه الرقم هرب");
 
 setTimeout(()=>{
 
 finish(true);
 
-},1200);
+},1500);
 
 return;
-
-}
 
 }
 
@@ -465,21 +502,71 @@ document.getElementById("final").style.display =
 
 if(win){
 
+if(gender == "شنقل"){
+
 document.getElementById("finalText").innerHTML =
 `
-هههههههههههههههه 😂💔<br><br>
-قسم بالله انك فاضي تجلس تطارد رقم 9
+😂💔 تحلم الحلم ذا دايم<br><br>
+ولا بس اليوم عيد؟<br><br>
+اتحداك تفوز
 `;
 
 }else{
 
 document.getElementById("finalText").innerHTML =
 `
-خلص الوقت 😭😂<br><br>
-كنت قريب والله
+😂💔 تحلمين الحلم ذا دايم<br><br>
+ولا بس اليوم عيدي؟<br><br>
+اتحداك تفوزين
 `;
 
 }
+
+}else{
+
+document.getElementById("finalText").innerHTML =
+`
+😭😂 خلص الوقت<br><br>
+واضح ان الـ100 طارت
+`;
+
+}
+
+}
+
+function restartGame(){
+
+document.getElementById("final").style.display =
+"none";
+
+document.getElementById("game").style.display =
+"none";
+
+document.getElementById("start").style.display =
+"flex";
+
+document.getElementById("name").value =
+savedName;
+
+document.getElementById("gender").value =
+savedGender;
+
+clearInterval(timer);
+
+current = 1;
+time = 15;
+
+fourClicks = 0;
+sevenClicks = 0;
+nineClicks = 0;
+
+document.getElementById("timer").innerText =
+"⏰ 15";
+
+document.getElementById("task").innerText =
+"اضغط رقم 1 👇";
+
+area.innerHTML = "";
 
 }
 
@@ -499,7 +586,7 @@ setTimeout(()=>{
 
 msg.style.display = "none";
 
-},1300);
+},1500);
 
 }
 
